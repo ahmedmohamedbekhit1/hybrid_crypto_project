@@ -1,0 +1,100 @@
+# Production-grade .gitignore for Python 3.11+ projects
+# Keep this file minimal, explicit and safe for cross-platform development.
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.pytest_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Logs and databases
+*.log
+logs/
+*.sqlite3
+
+# Environment variables
+.env
+.env.*
+env.local
+
+# Editor directories and files
+# VSCode
+.vscode/
+# JetBrains (PyCharm)
+.idea/
+
+# OS files
+# Windows
+Thumbs.db
+Desktop.ini
+# macOS
+.DS_Store
+
+# Temporary files
+*.swp
+*.swo
+*~
+*.tmp
+tmp/
+temp/
+
+# Debug files
+*.log
+debug.log
+
+# Ignore wheel and egg outputs
+*.egg
+*.whl
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+dist/
+build/
+__pycache__/
+
+# tox
+.tox/
+
+# Virtualenv
+.venv/
+
+# Local notebooks and checkpoints
+.ipynb_checkpoints/
+
+# python bytecode from pip caches
+__pypackages__/
+
+# Exclude IDE specific workspace files that may contain secrets
+*.code-workspace
+
+# Keep important project files tracked (explicitly not ignored):
+# - README.md
+# - pyproject.toml
+# - requirements.txt
+# - source code

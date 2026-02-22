@@ -1,0 +1,3 @@
+cryptography>=40.0
+# Optional post-quantum backend (install only when desired)
+# python-oqs>=0.7
