@@ -1,13 +1,11 @@
 # Hybrid Cryptography Project
 
-## Abstract
+## Overview
 
-This project is an enterprise-grade reference implementation of a Hybrid
-Cryptography CLI designed for academic review, professional audit, and
-production-minded engineering. It demonstrates a secure hybrid encryption
-architecture combining classical RSA, authenticated AES-256-GCM symmetric
-encryption, and a pluggable post-quantum KEM abstraction (Kyber via liboqs if
-available) with a safe mock fallback.
+This repository provides a Hybrid Cryptography command-line tool that combines
+classical RSA, AES-256-GCM for authenticated encryption, and a pluggable
+post-quantum KEM adapter. A secure mock adapter is available for development
+when a native PQ backend is not installed.
 
 ## Architecture Overview
 
