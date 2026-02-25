@@ -1,3 +1,5 @@
-cryptography>=40.0
-# Optional post-quantum backend (install only when desired)
-# python-oqs>=0.7
+cryptography>=43.0.0
+boto3>=1.36.0
+typer>=0.15.1
+# Install oqs from local bindings source (no remote download in requirements):
+#   .venv/Scripts/pip install <path-to-liboqs-python>
