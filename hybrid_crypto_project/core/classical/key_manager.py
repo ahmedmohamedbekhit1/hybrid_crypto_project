@@ -4,10 +4,7 @@ This module provides secure filesystem operations for key material.
 """
 from __future__ import annotations
 
-from typing import Optional
 import os
-import stat
-
 from pathlib import Path
 
 
@@ -45,7 +42,7 @@ def load_bytes(path: str) -> bytes:
         return f.read()
 
 
-def safe_path(path: str, base_dir: Optional[str] = None) -> str:
+def safe_path(path: str, base_dir: str | None = None) -> str:
     """Validate and return an absolute path within base_dir if provided.
 
     Prevents path traversal when base_dir is set.

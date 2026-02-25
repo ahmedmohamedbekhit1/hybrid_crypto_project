@@ -1,11 +1,10 @@
 """File handling utilities with safe path validation and atomic writes."""
 from __future__ import annotations
 
-from typing import Optional
 from pathlib import Path
-import os
 
-def safe_path(path: str, base_dir: Optional[str] = None) -> str:
+
+def safe_path(path: str, base_dir: str | None = None) -> str:
     """Return an absolute, resolved path and optionally ensure it's inside base_dir."""
     p = Path(path).resolve()
     if base_dir is not None:

@@ -1,28 +1,25 @@
-"""Base classes and interfaces for post-quantum KEM adapters."""
+"""Interfaces for real post-quantum KEM operations."""
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Tuple
 
 
 class KEMAdapter(ABC):
-    """Abstract interface for a KEM adapter.
+    """Abstract interface for KEM operations used by the hybrid engine."""
 
-    Implementations MUST not expose raw private key bytes and MUST provide
-    deterministic serialization for public keys.
-    """
+    @property
+    @abstractmethod
+    def algorithm(self) -> str:
+        """Return the KEM algorithm name."""
 
     @abstractmethod
-    def generate_keypair(self) -> Tuple[bytes, bytes]:
-        """Generate (public_key, private_key) bytes. Private key kept by caller."""
+    def generate_keypair(self) -> tuple[bytes, bytes]:
+        """Generate and return (public_key, private_key) bytes."""
 
     @abstractmethod
-    def encapsulate(self, public_key: bytes) -> Tuple[bytes, bytes]:
-        """Encapsulate to a recipient public key.
-
-        Returns (ciphertext, shared_secret).
-        """
+    def encapsulate(self, public_key: bytes) -> tuple[bytes, bytes]:
+        """Return (ciphertext, shared_secret) for the recipient public key."""
 
     @abstractmethod
     def decapsulate(self, ciphertext: bytes, private_key: bytes) -> bytes:
-        """Recover shared secret from ciphertext and recipient private key."""
+        """Return shared secret recovered from ciphertext and private key."""

@@ -1,49 +1,58 @@
-"""AES-256-GCM symmetric encryption wrapper.
-
-Uses pyca/cryptography's AESGCM for authenticated encryption.
-"""
+"""AES-256-GCM helper primitives."""
 from __future__ import annotations
 
-from typing import Tuple
 import secrets
-import base64
 
+from cryptography.exceptions import InvalidTag
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 
 class AESGCMCipher:
-    """Convenience wrapper for AES-256-GCM operations.
-
-    The AES key is 32 bytes (256 bits). Nonce/IV is 12 bytes recommended for GCM.
-    """
+    """AES-256-GCM operations with explicit IV and tag handling."""
 
     KEY_SIZE = 32
     IV_SIZE = 12
+    TAG_SIZE = 16
 
-    @staticmethod
-    def generate_key() -> bytes:
-        """Generate a cryptographically secure 32-byte key."""
-        return secrets.token_bytes(AESGCMCipher.KEY_SIZE)
+    @classmethod
+    def generate_key(cls) -> bytes:
+        return secrets.token_bytes(cls.KEY_SIZE)
 
-    @staticmethod
-    def encrypt(key: bytes, plaintext: bytes, associated_data: bytes | None = None) -> Tuple[bytes, bytes]:
-        """Encrypt plaintext and return (nonce, ciphertext).
+    @classmethod
+    def generate_iv(cls) -> bytes:
+        return secrets.token_bytes(cls.IV_SIZE)
 
-        The ciphertext returned contains the authentication tag appended (AESGCM default).
-        """
-        if len(key) != AESGCMCipher.KEY_SIZE:
-            raise ValueError("Invalid AES key size")
-        aesgcm = AESGCM(key)
-        nonce = secrets.token_bytes(AESGCMCipher.IV_SIZE)
-        ct = aesgcm.encrypt(nonce, plaintext, associated_data)
-        return nonce, ct
+    @classmethod
+    def encrypt(
+        cls,
+        key: bytes,
+        iv: bytes,
+        plaintext: bytes,
+        aad: bytes | None = None,
+    ) -> tuple[bytes, bytes]:
+        if len(key) != cls.KEY_SIZE:
+            raise ValueError("AES-256 key must be 32 bytes")
+        if len(iv) != cls.IV_SIZE:
+            raise ValueError("AES-GCM IV must be 12 bytes")
+        combined = AESGCM(key).encrypt(iv, plaintext, aad)
+        return combined[:-cls.TAG_SIZE], combined[-cls.TAG_SIZE:]
 
-    @staticmethod
-    def decrypt(key: bytes, nonce: bytes, ciphertext: bytes, associated_data: bytes | None = None) -> bytes:
-        """Decrypt and validate tag. Raises exceptions on failure."""
-        if len(key) != AESGCMCipher.KEY_SIZE:
-            raise ValueError("Invalid AES key size")
-        if len(nonce) != AESGCMCipher.IV_SIZE:
-            raise ValueError("Invalid nonce size")
-        aesgcm = AESGCM(key)
-        return aesgcm.decrypt(nonce, ciphertext, associated_data)
+    @classmethod
+    def decrypt(
+        cls,
+        key: bytes,
+        iv: bytes,
+        ciphertext: bytes,
+        tag: bytes,
+        aad: bytes | None = None,
+    ) -> bytes:
+        if len(key) != cls.KEY_SIZE:
+            raise ValueError("AES-256 key must be 32 bytes")
+        if len(iv) != cls.IV_SIZE:
+            raise ValueError("AES-GCM IV must be 12 bytes")
+        if len(tag) != cls.TAG_SIZE:
+            raise ValueError("AES-GCM tag must be 16 bytes")
+        try:
+            return AESGCM(key).decrypt(iv, ciphertext + tag, aad)
+        except InvalidTag as exc:
+            raise ValueError("AES-GCM authentication failed") from exc

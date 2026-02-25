@@ -1,22 +1,15 @@
-"""Factory to provide a KEM adapter depending on runtime availability."""
+"""Factory returning the mandatory real post-quantum KEM adapter."""
 from __future__ import annotations
 
-from typing import Type
-
 from .base import KEMAdapter
+from .kyber_adapter import Kyber768Adapter, PQUnavailableError
 
 
-def get_kem_adapter() -> Type[KEMAdapter]:
-    """Return the best available KEM adapter class.
-
-    Tries to use `kyber_adapter.KyberAdapter` (requires `oqs`). Falls back to
-    `mock_adapter.MockKEMAdapter` when oqs is not present.
-    """
+def get_mandatory_kem_adapter() -> KEMAdapter:
+    """Return Kyber768 adapter or fail hard if unavailable."""
+    adapter = Kyber768Adapter()
     try:
-        from .kyber_adapter import KyberAdapter  # type: ignore
-
-        return KyberAdapter
-    except Exception:
-        from .mock_adapter import MockKEMAdapter  # type: ignore
-
-        return MockKEMAdapter
+        _ = adapter.algorithm
+    except Exception as exc:
+        raise PQUnavailableError("Post-quantum KEM initialization failed") from exc
+    return adapter
