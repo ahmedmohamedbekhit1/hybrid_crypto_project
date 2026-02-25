@@ -1,4 +1,4 @@
-PYTHON := .venv/Scripts/python.exe
+PYTHON := .venv\Scripts\python.exe
 OQS_PY_PATH ?= liboqs-python
 
 .PHONY: install install-oqs-local check run test benchmark clean help
