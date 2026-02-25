@@ -1,5 +1,4 @@
 PYTHON := .venv/Scripts/python
-PIP := .venv/Scripts/pip.exe
 OQS_PY_PATH ?= liboqs-python
 
 .PHONY: install install-oqs-local check run test benchmark clean help
@@ -8,10 +7,10 @@ OQS_PY_PATH ?= liboqs-python
 install:
 	python -m venv .venv
 	$(PYTHON) -m pip install --upgrade pip
-	$(PIP) install -r requirements.txt
-	$(PIP) install -r requirements-dev.txt
-	$(PIP) install cmake ninja
-	$(PIP) install -e .
+	$(PYTHON) -m pip install -r requirements.txt
+	$(PYTHON) -m pip install -r requirements-dev.txt
+	$(PYTHON) -m pip install cmake ninja
+	$(PYTHON) -m pip install -e .
 	$(MAKE) install-oqs-local OQS_PY_PATH=$(OQS_PY_PATH)
 	$(MAKE) build-liboqs-local
 
